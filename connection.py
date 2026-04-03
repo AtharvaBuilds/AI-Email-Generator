@@ -2,7 +2,7 @@ from platform import system
 
 from openai import OpenAI
 
-client = OpenAI(api_key="sk-5983be00a52d4068a9bd6d12731c0f99", base_url="https://api.deepseek.com")
+client = OpenAI(api_key="xyz", base_url="https://api.deepseek.com")
 
 system_prompt='''
 You are an expert professional email writer and communication assistant.
