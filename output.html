@@ -1,0 +1,426 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Output</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--{{ai_response | safe}}<br><br>-->
+<!--<a href="/">-->
+<!--<button>Genereate new Email </button>-->
+<!--</a>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Email · AI Email Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #16161f;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8a96e;
+      --accent-glow: rgba(200,169,110,0.25);
+      --accent2: #7c6fcd;
+      --text: #e8e4da;
+      --muted: #7a7a8c;
+      --email-bg: rgba(255,255,255,0.03);
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(124,111,205,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(200,169,110,0.10) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .orb1 { width: 400px; height: 400px; background: var(--accent2); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb2 { width: 300px; height: 300px; background: var(--accent); bottom: -80px; right: -80px; animation-delay: -4s; }
+    .orb3 { width: 200px; height: 200px; background: #5ea8c8; top: 50%; left: 60%; animation-delay: -8s; opacity: 0.10; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.07); }
+    }
+
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 620px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(124,111,205,0.08);
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) both;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 25px;
+      background: linear-gradient(120deg, transparent 30%, rgba(200,169,110,0.12) 50%, transparent 70%);
+      background-size: 200% 200%;
+      animation: shimmer 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 200%; }
+      50%  { background-position: 0% 0%; }
+      100% { background-position: 200% 200%; }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(32px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.1s both;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(100, 200, 130, 0.1);
+      border: 1px solid rgba(100, 200, 130, 0.28);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7ecfa0;
+      margin-bottom: 1.1rem;
+    }
+    .badge::before { content: '✔'; font-size: 0.65rem; }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #e8e4da 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 300;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 1.8rem 0;
+    }
+
+    /* Email output box */
+    .email-box {
+      position: relative;
+      background: var(--email-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.2s both;
+      transition: border-color 0.3s;
+    }
+
+    .email-box:hover { border-color: rgba(200,169,110,0.2); }
+
+    .email-box-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    .email-label {
+      margin-left: auto;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .email-content {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: #ccc8be;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Copy button inside the box */
+    .copy-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(200,169,110,0.1);
+      border: 1px solid rgba(200,169,110,0.22);
+      border-radius: 8px;
+      padding: 5px 12px;
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .copy-btn:hover {
+      background: rgba(200,169,110,0.18);
+      box-shadow: 0 2px 12px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .copy-btn.copied {
+      background: rgba(100,200,130,0.12);
+      border-color: rgba(100,200,130,0.3);
+      color: #7ecfa0;
+    }
+
+    /* Actions */
+    .actions {
+      margin-top: 2rem;
+      display: flex;
+      gap: 1rem;
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.3s both;
+    }
+
+    .btn-primary, .btn-secondary {
+      flex: 1;
+      position: relative;
+      border: none;
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #c8a96e, #a8854a);
+      color: #0a0a0f;
+      box-shadow: 0 4px 24px rgba(200,169,110,0.28);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(200,169,110,0.4);
+      filter: brightness(1.05);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.09);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .btn-secondary:active { transform: translateY(0); }
+
+    .btn-icon { font-size: 1rem; transition: transform 0.3s; }
+    .btn-primary:hover .btn-icon { transform: rotate(-10deg); }
+    .btn-secondary:hover .btn-icon { transform: translateX(-3px); }
+
+    /* Ripple */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: scale(0);
+      animation: ripple-anim 0.5s linear;
+      pointer-events: none;
+    }
+    @keyframes ripple-anim { to { transform: scale(4); opacity: 0; } }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 1.4rem;
+      font-size: 0.75rem;
+      color: rgba(122,122,140,0.45);
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.4s both;
+    }
+
+    /* Typing cursor animation for the email text */
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-bg"></div>
+
+  <div class="page">
+    <div class="card">
+
+      <div class="header">
+        <div class="badge">Email Ready</div>
+        <h1>Your Email is Ready</h1>
+        <p class="subtitle">Review, copy, and send your AI-crafted message</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="email-box">
+        <div class="email-box-header">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="email-label">Generated Output</span>
+        </div>
+
+        <button class="copy-btn" id="copyBtn" onclick="copyEmail()">
+          <span id="copyIcon">⧉</span>
+          <span id="copyText">Copy</span>
+        </button>
+
+        <div class="email-content" id="emailContent">{{ ai_response | safe }}</div>
+      </div>
+
+      <div class="actions">
+        <a href="/" class="btn-secondary">
+          <span class="btn-icon">←</span>
+          <span>Generate New</span>
+        </a>
+        <button class="btn-primary" onclick="copyEmail()">
+          <span>Copy to Clipboard</span>
+          <span class="btn-icon">✉</span>
+        </button>
+      </div>
+
+      <p class="footer-note">Powered by AI · Private &amp; Secure</p>
+
+    </div>
+  </div>
+
+  <script>
+    // Ripple effect
+    document.querySelectorAll('.btn-primary, .btn-secondary').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        const circle = document.createElement('span');
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+        const rect = this.getBoundingClientRect();
+        circle.style.cssText = `width:${diameter}px;height:${diameter}px;left:${e.clientX - rect.left - radius}px;top:${e.clientY - rect.top - radius}px;`;
+        circle.classList.add('ripple');
+        this.querySelector('.ripple')?.remove();
+        this.appendChild(circle);
+      });
+    });
+
+    // Copy to clipboard
+    function copyEmail() {
+      const text = document.getElementById('emailContent').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const icon = document.getElementById('copyIcon');
+        const label = document.getElementById('copyText');
+        btn.classList.add('copied');
+        icon.textContent = '✔';
+        label.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          icon.textContent = '⧉';
+          label.textContent = 'Copy';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

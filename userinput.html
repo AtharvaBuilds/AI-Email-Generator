@@ -1,0 +1,411 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>INPUT</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<form method="post">-->
+<!--    <label for="situation">Enter situation : </label><br><br>-->
+<!--    <input type="text" id="situation" name="situation"><br><br>-->
+
+<!--    <label for="whom">Whom to write : </label><br><br>-->
+<!--    <input type="text" id="whom" name="whom"><br><br>-->
+<!--    <label for="generate">Generate Mail</label><br><br>-->
+<!--    <input type="submit" value="Generate" id="generate" name="generate">-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Email Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #16161f;
+      --border: rgba(255,255,255,0.07);
+      --accent: #c8a96e;
+      --accent-glow: rgba(200,169,110,0.25);
+      --accent2: #7c6fcd;
+      --text: #e8e4da;
+      --muted: #7a7a8c;
+      --input-bg: rgba(255,255,255,0.04);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(124,111,205,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(200,169,110,0.10) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      pointer-events: none;
+      z-index: 0;
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+    .orb1 { width: 400px; height: 400px; background: var(--accent2); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb2 { width: 300px; height: 300px; background: var(--accent); bottom: -80px; right: -80px; animation-delay: -4s; }
+    .orb3 { width: 200px; height: 200px; background: #5ea8c8; top: 50%; left: 60%; animation-delay: -8s; opacity: 0.10; }
+
+    @keyframes drift {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 20px) scale(1.07); }
+    }
+
+    /* Grid lines */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    /* Page wrapper */
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    /* Card */
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem 3rem 2.5rem;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 60px rgba(124,111,205,0.08);
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(32px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.1s both;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(200,169,110,0.1);
+      border: 1px solid rgba(200,169,110,0.25);
+      border-radius: 100px;
+      padding: 4px 14px;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+    .badge::before { content: '✦'; font-size: 0.6rem; }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #e8e4da 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 300;
+      letter-spacing: 0.01em;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 2rem 0;
+    }
+
+    /* Form */
+    form { animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.2s both; }
+
+    .field {
+      margin-bottom: 1.6rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      transition: color 0.2s;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      color: var(--muted);
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      outline: none;
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+    }
+
+    input[type="text"]::placeholder { color: rgba(122,122,140,0.55); }
+
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      background: rgba(200,169,110,0.05);
+      box-shadow: 0 0 0 3px var(--accent-glow), 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    input[type="text"]:focus ~ .input-icon,
+    .input-wrap:focus-within .input-icon {
+      color: var(--accent);
+    }
+
+    .field:focus-within label { color: var(--accent); }
+
+    /* Submit button */
+    .btn-wrap {
+      margin-top: 2rem;
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.3s both;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      position: relative;
+      background: linear-gradient(135deg, #c8a96e, #a8854a);
+      border: none;
+      border-radius: 14px;
+      padding: 1rem;
+      color: #0a0a0f;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+      box-shadow: 0 4px 24px rgba(200,169,110,0.3);
+    }
+
+    button[type="submit"]::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18), transparent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(200,169,110,0.4);
+      filter: brightness(1.05);
+    }
+
+    button[type="submit"]:hover::before { opacity: 1; }
+
+    button[type="submit"]:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 12px rgba(200,169,110,0.25);
+    }
+
+    /* Ripple */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transform: scale(0);
+      animation: ripple-anim 0.5s linear;
+      pointer-events: none;
+    }
+    @keyframes ripple-anim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    .btn-inner { position: relative; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-icon { font-size: 1.1rem; transition: transform 0.3s; }
+    button[type="submit"]:hover .btn-icon { transform: translateX(4px) rotate(-10deg); }
+
+    /* Footer note */
+    .footer-note {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.75rem;
+      color: rgba(122,122,140,0.5);
+      animation: rise 0.8s cubic-bezier(.22,1,.36,1) 0.4s both;
+    }
+
+    /* Shimmer on card border */
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 25px;
+      background: linear-gradient(120deg, transparent 30%, rgba(200,169,110,0.12) 50%, transparent 70%);
+      background-size: 200% 200%;
+      animation: shimmer 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .card { position: relative; }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 200%; }
+      50%  { background-position: 0% 0%; }
+      100% { background-position: 200% 200%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="grid-bg"></div>
+
+  <div class="page">
+    <div class="card">
+
+      <div class="header">
+        <div class="badge">AI Powered</div>
+        <h1>Email Generator</h1>
+        <p class="subtitle">Craft perfect emails in seconds with AI assistance</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <form method="post">
+
+        <div class="field">
+          <label for="situation">Situation</label>
+          <div class="input-wrap">
+            <span class="input-icon">✦</span>
+            <input type="text" id="situation" name="situation" placeholder="e.g. Request for project deadline extension" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="whom">Recipient</label>
+          <div class="input-wrap">
+            <span class="input-icon">◈</span>
+            <input type="text" id="whom" name="whom" placeholder="e.g. Manager, Client, HR Team" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="btn-wrap">
+          <button type="submit" id="generate" name="generate">
+            <span class="btn-inner">
+              <span>Generate Email</span>
+              <span class="btn-icon">✉</span>
+            </span>
+          </button>
+        </div>
+
+      </form>
+
+      <p class="footer-note">Powered by AI · Private &amp; Secure</p>
+
+    </div>
+  </div>
+
+  <script>
+    // Ripple effect on button
+    document.querySelector('button[type="submit"]').addEventListener('click', function(e) {
+      const btn = this;
+      const circle = document.createElement('span');
+      const diameter = Math.max(btn.clientWidth, btn.clientHeight);
+      const radius = diameter / 2;
+      const rect = btn.getBoundingClientRect();
+      circle.style.cssText = `
+        width: ${diameter}px; height: ${diameter}px;
+        left: ${e.clientX - rect.left - radius}px;
+        top: ${e.clientY - rect.top - radius}px;
+      `;
+      circle.classList.add('ripple');
+      btn.querySelector('.ripple')?.remove();
+      btn.appendChild(circle);
+    });
+
+    // Floating label animation on input focus
+    document.querySelectorAll('input[type="text"]').forEach(input => {
+      input.addEventListener('focus', () => {
+        input.closest('.field').querySelector('.input-icon').style.transform = 'translateY(-50%) scale(1.2)';
+      });
+      input.addEventListener('blur', () => {
+        input.closest('.field').querySelector('.input-icon').style.transform = 'translateY(-50%) scale(1)';
+      });
+    });
+  </script>
+</body>
+</html>
